@@ -1,2 +1,17 @@
-5 + 5;
-let x = 5;
+x = 4;
+y = 6;
+
+z = fn(a, b){
+	ret a + b;
+}(6, 7);
+
+main = fn(a, b){
+	ret a + b;
+};
+
+me = fn(a, b){
+	ret a(2) + b(3);
+}(
+	fn(c){ret c*2;},
+	fn(d){ret d*3;}
+);

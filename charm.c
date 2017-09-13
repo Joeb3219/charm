@@ -12,6 +12,8 @@ int main(int argc, char **argv){
 
 	FILE* file = readFile(argv[1], "r");
 
+	if(file == 0) return 1;
+
 	closeFile(file);
 
 	return 0;
