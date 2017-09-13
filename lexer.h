@@ -34,4 +34,6 @@ typedef enum TokenType TokenType;
 typedef struct Token Token;;
 typedef struct TreeNode TreeNode;
 
+Token** getTokens(FILE* file);
+
 #endif

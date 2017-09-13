@@ -14,6 +14,10 @@ int main(int argc, char **argv){
 
 	if(file == 0) return 1;
 
+	Token **tokens = getTokens(file);
+
+	printTokens(tokens);
+
 	closeFile(file);
 
 	return 0;
