@@ -20,5 +20,7 @@ int main(int argc, char **argv){
 
 	closeFile(file);
 
+	printf("\n");
+
 	return 0;
 }

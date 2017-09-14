@@ -39,24 +39,33 @@ char* getCharactersUntilDelimiter(FILE* file){
 	char c;
 	int count = 0;
 
-	while( (c = fgetc(file)) != EOF){
-		count ++;
+	printf("PEeking: %c\n", fpeek(file));
+
+	while((c = fgetc(file)) != EOF){
+		printf("Found character >>%c<<\n", c);
 		if(c == '\n'|| c == ' ' || c == '\0' || c == '\t' || c == '\r') break;
-		sprintf(buffer, "%c", c);
+		buffer[count] = c;
+		count ++;
 	}
+
+	buffer[count] = '\0';
+
+	printf("Current string for evaluation: >>%s<<\n", buffer);
 
 	fseek(file, -count, SEEK_CUR);
 
 	return buffer;
 }
 
-void identifyType(Token* token, FILE* file, int startPos){
+void identifyType(Token* token, FILE* file){
+	int initialBlockLength = 0;
 	TokenType type = -1;
-	fseek(file, startPos, SEEK_SET);
 
 	token->text = NULL;
 
 	char current = fpeek(file);
+
+	printf("CURRENT: %c\n", current);
 
 	if(current == ' ' || current == '\0' || current == '\t' || current == '\r' || current == '\n'){
 		token->type = -1;
@@ -65,13 +74,22 @@ void identifyType(Token* token, FILE* file, int startPos){
 	 // Error, we are trying to find a token from an invalid start.
 	}
 
-	char *block = getCharactersUntilDelimiter(file);
+	printf("Asking for chars until delimiter, beginning with: %c\n", fpeek(file));
 
+	char *block = getCharactersUntilDelimiter(file);
+	initialBlockLength = strlen(block);
+
+	if(strlen(block) == 0){
+		error(ERR_SEVERE, -1, -1, "GG");
+	}
+
+	printf("Being asked to identify %s (strlen: %d)\n", block, (int) strlen(block));
 
 	// Strategy: while length is greater than largest non-id/num length, check if id or number,
 	// and then if not, append an \0 to the end of the string
 	// eventually, the length will either be the right size (<= 6), or we will have found an identifier/number.
 	while(type == -1 && strlen(block) > 6){
+		printf("Length is now %d\n", (int) strlen(block));
 		if(isIdentifier(block) == 1) type = IDENTIFIER;
 		else if(isNumber(block) == 1) type = NUMBER;
 		else block[strlen(block) - 1] = '\0';
@@ -106,6 +124,7 @@ void identifyType(Token* token, FILE* file, int startPos){
 	}
 
 	if(type == -1 && strlen(block) == 2){
+		printf("Block is 2! Block is %s, is it fn?: %d\n", block, strcmp(block, "fn"));
 		if(strcmp(block, "fn") == 0) type = FN;
 		else if(strcmp(block, "if") == 0) type = IF;
 		else if(strcmp(block, "<=") == 0) type = CMP_LE;
@@ -120,6 +139,7 @@ void identifyType(Token* token, FILE* file, int startPos){
 	}
 
 	if(type == -1 && strlen(block) == 1){
+		printf("In that inner mess boys\n");
 		if(strcmp(block, "(") == 0) type = PAREN_OPEN;
 		else if(strcmp(block, ")") == 0) type = PAREN_CLOSE;
 		else if(strcmp(block, "{") == 0) type = CURLY_OPEN;
@@ -143,12 +163,20 @@ void identifyType(Token* token, FILE* file, int startPos){
 		else block[strlen(block) - 1] = '\0';
 	}
 
+	// Since we searched until a delimiter and then shrink our search, we may be some characters ahead in the file.
+	// This occurs for example in: x = 5;, where searching starting at 5 will yield "5;", but narrow it down
+	// After the search, we will now have the file pointer after ";". Thus, we must split the difference:
+	// The total number of characters searched - the final block size.
+//	fseek(file, -(initialBlockLength - strlen(block)), SEEK_CUR);
+
 	if(type == -1){
 		type = END;
 		error(ERR_SEVERE, -1, -1, "Unknown symbol: %s", block);
 	}
 
 	if(token->text == 0){
+		printf("Assigning a type!: %s\n", tokenTypeToString(type));
+		printf("Assigning a text: %s (%d)\n", block, (int) strlen(block));
 		token->type = type;
 		token->text = block;
 	}
@@ -158,20 +186,19 @@ void identifyType(Token* token, FILE* file, int startPos){
 Token** getTokens(FILE* file){
 	Token** tokens = NULL;
 	int numTokens = 0;
-	// To clarify: currPos represents the current character number in the FILE, whereas colNo is the position in the LINE.
-	int i, lineNo = 0, colNo = -1, currPos = 0;
+	int i, lineNo = 0, colNo = -1;
 
 	char c;
 	while( (c = fpeek(file)) != EOF){
+		printf("Currently (from gettokens): >>%c<<\n", c);
 		// If we encounter a space character, we consume the character and advance to the next character.
 		if(c == ' ' || c == '\t' || c == '\r'){
-			currPos ++;
+			printf("Current character is a spacing\n");
 			colNo ++;
 			fgetc(file);	// Consumes the character to advance the file pointer.
 			continue;
 		// If we encounter a new line symbol, we advance to the next line and consume the character.
 		}else if(c == '\n'){
-			currPos ++;
 			lineNo ++;
 			colNo = -1;	// Go back to the start column.
 			fgetc(file);	// Consume the character to advance the file pointer.
@@ -187,21 +214,23 @@ Token** getTokens(FILE* file){
 		token->col = colNo;
 
 		// Get details of what the type of token we're looking at, to be stored right in our struct.
-		identifyType(token, file, currPos);
+		printf("Currently at line %d col %d (%c)\n", lineNo, colNo, fpeek(file));
+		identifyType(token, file);
+
+		fseek(file, strlen(token->text), SEEK_CUR);
 
 		// Now that we have the token's type and text found, we will advance through the file through the end of the token.
 		// This keeps us in line with the column and line counts, as expected.
-		for(i = 0; i < strlen(token->text); i ++){
-			currPos ++;
-			c = fgetc(file);
+//		for(i = 0; i < strlen(token->text); i ++){
+//			c = fgetc(file);
 			// If we encountered a new line, that's an issue: that means a token spanned over two lines.
 			// We allow it for now in case there is future support of multiline tokens, but really this will likely cause a parser error in any real scenarios.
-			if(c == '\n'){
-				lineNo ++;
-				colNo = -1;
-				break;
-			}
-		}
+//			if(c == '\n'){
+//				lineNo ++;
+//				colNo = -1;
+//				break;
+//			}
+//		}
 
 		// We now can allocate space in our array of tokens for this token, and then pop it onto the end.
 		if(numTokens == 0) tokens = malloc(sizeof(Token) * 1);
