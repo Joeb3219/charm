@@ -55,17 +55,12 @@ char* tokenToString(Token *token){
 	return buffer;
 }
 
-void printTokens(Token** tokens){
+void printTokens(FILE *file, Token** tokens){
 	int i = 0;
-	int currLine = 0;
 	while( tokens[i]->type != END){
 		Token *token = tokens[i];
-		while( token->line > currLine){
-			printf("\n");
-			currLine ++;
-		}
 		char* str = tokenToString(token);
-		printf("%s, ", str);
+		fprintf(file, "%s, ", str);
 		free(str);
 		i++;
 	}
@@ -75,22 +70,22 @@ char* tokenTypeToString(TokenType type){
 	char *buffer = malloc(7);
 	switch(type){
 		case PAREN_OPEN:
-			sprintf(buffer, "(");
+			sprintf(buffer, "PRNOPN");
 			break;
 		case PAREN_CLOSE:
-			sprintf(buffer, ")");
+			sprintf(buffer, "PRNCLS");
 			break;
 		case CURLY_OPEN:
-			sprintf(buffer, "{");
+			sprintf(buffer, "CRLOPN");
 			break;
 		case CURLY_CLOSE:
-			sprintf(buffer, "}");
+			sprintf(buffer, "CRLCLS");
 			break;
 		case IDENTIFIER:
 			sprintf(buffer, "IDENT");
 			break;
 		case ASSIGN:
-			sprintf(buffer, "=");
+			sprintf(buffer, "ASSIGN");
 			break;
 		case FN:
 			sprintf(buffer, "FN");
@@ -105,10 +100,10 @@ char* tokenTypeToString(TokenType type){
 			sprintf(buffer, "STRUCT");
 			break;
 		case SEMICOLON:
-			sprintf(buffer, ";");
+			sprintf(buffer, "SMICLN");
 			break;
 		case COLON:
-			sprintf(buffer, ":");
+			sprintf(buffer, "COLON");
 			break;
 		case IF:
 			sprintf(buffer, "IF");
@@ -120,58 +115,58 @@ char* tokenTypeToString(TokenType type){
 			sprintf(buffer, "FOR");
 			break;
 		case OP_ADD:
-			sprintf(buffer, "+");
+			sprintf(buffer, "ADD");
 			break;
 		case OP_MULT:
-			sprintf(buffer, "*");
+			sprintf(buffer, "MULT");
 			break;
 		case OP_DIV:
-			sprintf(buffer, "/");
+			sprintf(buffer, "DIV");
 			break;
 		case OP_SUB:
-			sprintf(buffer, "-");
+			sprintf(buffer, "SUB");
 			break;
 		case OP_MODULO:
 			sprintf(buffer, "MOD");
 			break;
 		case OP_EXP:
-			sprintf(buffer, "^");
+			sprintf(buffer, "EXP");
 			break;
 		case OP_AND:
-			sprintf(buffer, "&&");
+			sprintf(buffer, "AND");
 			break;
 		case OP_OR:
-			sprintf(buffer, "||");
+			sprintf(buffer, "OR");
 			break;
 		case OP_BIT_AND:
-			sprintf(buffer, "&");
+			sprintf(buffer, "BITAND");
 			break;
 		case OP_BIT_OR:
-			sprintf(buffer, "|");
+			sprintf(buffer, "BITOR");
 			break;
 		case OP_NOT:
-			sprintf(buffer, "!");
+			sprintf(buffer, "NOT");
 			break;
 		case CMP_L:
-			sprintf(buffer, "<");
+			sprintf(buffer, "LESSTH");
 			break;
 		case CMP_G:
-			sprintf(buffer, ">");
+			sprintf(buffer, "GRTRTH");
 			break;
 		case CMP_LE:
-			sprintf(buffer, "<=");
+			sprintf(buffer, "LESSEQ");
 			break;
 		case CMP_GE:
-			sprintf(buffer, ">=");
+			sprintf(buffer, "GRTREQ");
 			break;
 		case CMP_E:
-			sprintf(buffer, "==");
+			sprintf(buffer, "EQUALS");
 			break;
 		case CMP_NE:
-			sprintf(buffer, "!=");
+			sprintf(buffer, "NTEQLS");
 			break;
 		case COMMA:
-			sprintf(buffer, ",");
+			sprintf(buffer, "COMMA");
 			break;
 		case END:
 			sprintf(buffer, "END");

@@ -12,7 +12,7 @@
 
 	char* tokenTypeToString(TokenType type);
 	char* tokenToString(Token *token);
-	void printTokens(Token** tokens);
+	void printTokens(FILE *file, Token** tokens);
 
 	char fpeek(FILE* stream);
 
