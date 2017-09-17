@@ -170,6 +170,9 @@ char* tokenTypeToString(TokenType type){
 		case CMP_NE:
 			sprintf(buffer, "!=");
 			break;
+		case COMMA:
+			sprintf(buffer, ",");
+			break;
 		case END:
 			sprintf(buffer, "END");
 			break;
