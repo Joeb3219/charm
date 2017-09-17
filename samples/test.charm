@@ -5,6 +5,14 @@ z = fn(a, b){
 	ret a + b;
 }(6, 7);
 
+f = fn(){
+	i = 0;
+	for(j = 1:100){
+		i += j;
+	}
+	ret i;
+}();
+
 main = fn(a, b){
 	ret a + b;
 };
