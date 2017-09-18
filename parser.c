@@ -58,7 +58,7 @@ void expression(TreeNode *head, Token **tokens, int *current){
 		else number(node, tokens, current);
 	}
 	if(token->type == PAREN_OPEN){
-		consume(); // Consume open paren
+		consumeOrDie(PAREN_OPEN); // Consume open paren
 		expression(node, tokens, current);
 		consumeOrDie(PAREN_CLOSE); // Consume the close paren
 	}
@@ -70,8 +70,8 @@ void func(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_FUNC);
 	addChild(head, node);
 	if(look()->type == FN){
-		consume(); // Consume the fn token
-		consume(); // Consume the ( token
+		consumeOrDie(FN); // Consume the fn token
+		consumeOrDie(PAREN_OPEN); // Consume the ( token
 		arglist(node, tokens, current);
 	}
 }
@@ -169,7 +169,7 @@ void stmtlist(TreeNode *head, Token **tokens, int *current){
 	Token *token = look();
 	if(token->type == IDENTIFIER || token->type == NUMBER || token->type == PAREN_OPEN || token->type == FOR || token->type == WHILE){
 		stmt(node, tokens, current);
-		consume();
+		consumeOrDie(SEMICOLON); // Consume the semicolon
 		stmtlist(node, tokens, current);
 	}
 }
