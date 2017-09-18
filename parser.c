@@ -2,109 +2,89 @@
 #include <stdio.h>
 #include "parser.h"
 
-#define SUCCESS 1
-#define FAILURE 0
-
-int stmt(TreeNode *head, Token **tokens, int *current){
+void stmt(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_STMT);
 	addChild(head, node);
-	return SUCCESS;
 }
 
-int assign(TreeNode *head, Token **tokens, int *current){
+void assign(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_ASSIGN);
 	addChild(head, node);
-	return SUCCESS;
 }
 
-int expression(TreeNode *head, Token **tokens, int *current){
+void expression(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_EXPRESSION);
 	addChild(head, node);
-	return SUCCESS;
 }
 
-int func(TreeNode *head, Token **tokens, int *current){
+void func(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_FUNC);
 	addChild(head, node);
-	return SUCCESS;
 }
 
-int funcExec(TreeNode *head, Token **tokens, int *current){
+void funcExec(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_FUNCEXEC);
 	addChild(head, node);
-	return SUCCESS;
 }
 
-int arglist(TreeNode *head, Token **tokens, int *current){
+void arglist(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_ARGLIST);
 	addChild(head, node);
-	return SUCCESS;
 }
 
-int paramlist(TreeNode *head, Token **tokens, int *current){
+void paramlist(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_PARAMLIST);
 	addChild(head, node);
-	return SUCCESS;
 }
 
-int fn_for(TreeNode *head, Token **tokens, int *current){
+void fn_for(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_FOR);
 	addChild(head, node);
-	return SUCCESS;
 }
 
-int fn_while(TreeNode *head, Token **tokens, int *current){
+void fn_while(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_WHILE);
 	addChild(head, node);
-	return SUCCESS;
 }
 
-int math(TreeNode *head, Token **tokens, int *current){
+void math(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_MATH);
 	addChild(head, node);
-	return SUCCESS;
 }
 
-int fn_sub(TreeNode *head, Token **tokens, int *current){
+void fn_sub(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_SUB);
 	addChild(head, node);
-	return SUCCESS;
 }
 
-int fn_add(TreeNode *head, Token **tokens, int *current){
+void fn_add(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_ADD);
 	addChild(head, node);
-	return SUCCESS;
 }
 
-int fn_div(TreeNode *head, Token **tokens, int *current){
+void fn_div(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_DIV);
 	addChild(head, node);
-	return SUCCESS;
 }
 
-int fn_mult(TreeNode *head, Token **tokens, int *current){
+void fn_mult(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_MULT);
 	addChild(head, node);
-	return SUCCESS;
 }
 
-int fn_pow(TreeNode *head, Token **tokens, int *current){
+void fn_pow(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_POW);
 	addChild(head, node);
-	return SUCCESS;
 }
 
-int stmtlist(TreeNode *head, Token **tokens, int *current){
+void stmtlist(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_STMTLIST);
 	addChild(head, node);
-	return SUCCESS;
 }
 
-int program(TreeNode *head, Token **tokens, int *current){
+void program(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_PROGRAM);
 	addChild(head, node);
-	return SUCCESS;
 }
 
 TreeNode *parse(Token** tokens){
