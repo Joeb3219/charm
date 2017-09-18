@@ -22,5 +22,6 @@ typedef enum TreeNodeLabel TreeNodeLabel;
 
 TreeNode *parse(Token** tokens);
 TreeNode *createNode(TreeNodeLabel label);
+void addChild(TreeNode* head, TreeNode* child);
 
 #endif

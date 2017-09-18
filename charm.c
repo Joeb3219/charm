@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "lexer.h"
 #include "io.h"
+#include "parser.h"
 
 int main(int argc, char **argv){
 
@@ -25,6 +26,8 @@ int main(int argc, char **argv){
 	printTokens(tokenOut, tokens);
 
 	closeFile(tokenOut);
+
+	parse(tokens);
 
 	printf("\n");
 
