@@ -7,6 +7,8 @@
 #define look() peek(tokens + (*current), 0)
 #define consume() consume(tokens, current)
 #define printCurrentToken() printf("[%s]: %s\n", __FUNCTION__, tokenToString(look()))
+#define unexpectedToken(T) error(ERR_SEVERE, T->line, T->col, "Encountered unexepected token: %s", T->text)
+#define consumeOrDie(E) {if(look()->type == E){consume();}else{unexpectedToken(look());}}
 
 // for -> <for>
 // while -> <while>
@@ -28,7 +30,9 @@ void assign(TreeNode *head, Token **tokens, int *current){
 	addChild(head, node);
 	Token *token = look();
 	if(token->type == IDENTIFIER){
-		
+		identifier(node, tokens, current);
+		consumeOrDie(ASSIGN); // Consumes the equals sign.
+		expression(node, tokens, current);
 	}
 }
 
@@ -54,28 +58,40 @@ void expression(TreeNode *head, Token **tokens, int *current){
 		else number(node, tokens, current);
 	}
 	if(token->type == PAREN_OPEN){
-		consume();
+		consume(); // Consume open paren
 		expression(node, tokens, current);
-		consume();
+		consumeOrDie(PAREN_CLOSE); // Consume the close paren
 	}
 }
 
+// fn -> fn ( <arglist> ) { <stmtlist> }
 void func(TreeNode *head, Token **tokens, int *current){
 	printCurrentToken();
 	TreeNode *node = createNode(TN_FUNC);
 	addChild(head, node);
+	if(look()->type == FN){
+		consume(); // Consume the fn token
+		consume(); // Consume the ( token
+		arglist(node, tokens, current);
+	}
 }
 
 void identifier(TreeNode *head, Token **tokens, int *current){
 	printCurrentToken();
 	TreeNode *node = createNode(TN_IDENTIFIER);
 	addChild(head, node);
+	if(look()->type == IDENTIFIER){
+		node->data = consume(); // Consume the identifier, and store the token inside the data of the node.
+	}
 }
 
 void number(TreeNode *head, Token **tokens, int *current){
 	printCurrentToken();
 	TreeNode *node = createNode(TN_NUMBER);
 	addChild(head, node);
+	if(look()->type == NUMBER){
+		node->data = consume(); // Consume the token, and store it into the data of the node.
+	}
 }
 
 void funcExec(TreeNode *head, Token **tokens, int *current){
@@ -158,6 +174,7 @@ void stmtlist(TreeNode *head, Token **tokens, int *current){
 	}
 }
 
+// Essentially always will yield a stmtlist.
 void program(TreeNode *head, Token **tokens, int *current){
 	printCurrentToken();
 	TreeNode *node = createNode(TN_PROGRAM);

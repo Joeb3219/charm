@@ -13,9 +13,11 @@ ret fn if while for
 <assign> := identifier = <expressionOrFunc>
 
 <expressionOrFunc> := <expression> | <func>
-<expression> := (<expr>) | <assign> | <math> | number | identifier | <funcExec>
+<expression> := (<expr>) | <assign> | <math> | number | identifier | <funcExec> | <return>
 <func> := fn ( <arglist> ) { <stmtlist> }
 <funcExec> := identifier ( <paramlist> )
+
+<return> := ret <expression>
 
 <arglist> := identifier , <arglist> | identifier | epsilon
 <paramlist> := <expression>, <paramlist> | <expression> | epsilon
