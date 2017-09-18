@@ -27,5 +27,7 @@ typedef enum TokenType TokenType;
 typedef struct Token Token;
 
 Token** getTokens(FILE* file);
+Token* peek(Token** tokens, int distance);
+Token* consume(Token** tokens, int *current);
 
 #endif

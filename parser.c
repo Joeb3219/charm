@@ -1,10 +1,23 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "parser.h"
+#include "io.h"
 
+#define peek() peek(tokens + (*current), 0)
+#define consume() consume(tokens, current)
+#define printCurrentToken() printf("%s\n", tokenToString(peek()))
+
+// for -> <for>
+// while -> <while>
+// identifier, number, ( -> expression
 void stmt(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_STMT);
 	addChild(head, node);
+	Token *token = peek();
+	printCurrentToken();
+	if(token->type == FOR) fn_for(node, tokens, current);
+	if(token->type == WHILE) fn_while(node, tokens, current);
+	if(token->type == IDENTIFIER || token->type == PAREN_OPEN || token->type == NUMBER) expression(node, tokens, current);
 }
 
 void assign(TreeNode *head, Token **tokens, int *current){
@@ -77,20 +90,30 @@ void fn_pow(TreeNode *head, Token **tokens, int *current){
 	addChild(head, node);
 }
 
+// identifier, (, number, for, while -> <stmt>; <stmtlist>
+// otherwise -> epsilon
 void stmtlist(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_STMTLIST);
 	addChild(head, node);
+	Token *token = peek();
+	printCurrentToken();
+	if(token->type == IDENTIFIER || token->type == NUMBER || token->type == PAREN_OPEN || token->type == FOR || token->type == WHILE){
+		stmt(node, tokens, current);
+		consume();
+		stmtlist(node, tokens, current);
+	}
 }
 
 void program(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_PROGRAM);
 	addChild(head, node);
+	stmtlist(node, tokens, current);
 }
 
 TreeNode *parse(Token** tokens){
 	int currentToken = 0;
 	TreeNode *head = createNode(TN_HEAD);
-	program(head, tokens, &currentToken);
+ 	program(head, tokens, &currentToken);
 	return NULL;
 }
 

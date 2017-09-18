@@ -8,12 +8,12 @@ ret fn if while for
 
 <program> := <stmtlist>
 <stmtlist> := <stmt>;<stmtlist>|epsilon
-<stmt> := <assign> | <expression> | <for> | <while>
+<stmt> := <expression> | <for> | <while>
 
 <assign> := identifier = <expressionOrFunc>
 
 <expressionOrFunc> := <expression> | <func>
-<expression> := (<expr>) | <math> | number | identifier | <funcExec>
+<expression> := (<expr>) | <assign> | <math> | number | identifier | <funcExec>
 <func> := fn ( <arglist> ) { <stmtlist> }
 <funcExec> := identifier ( <paramlist> )
 

@@ -4,6 +4,11 @@
 #include "io.h"
 #include "lexer.h"
 
+Token* consume(Token** tokens, int *current){
+	(*current) = (*current) + 1; // Advance one token forward.
+	return tokens[(*current) - 1]; // Return the previous token.
+}
+
 Token* peek(Token** tokens, int distance){
 	int i;
 	for(i = 0; i < distance; i ++){
