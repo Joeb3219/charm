@@ -12,9 +12,13 @@ ret fn if while for
 
 <assign> := identifier = <expressionOrFunc>
 
+<expressionOrFunc> := <expression> | <func>
 <expression> := (<expr>) | <math> | number | identifier | <funcExec>
 <func> := fn ( <arglist> ) { <stmtlist> }
 <funcExec> := identifier ( <paramlist> )
+
+<arglist> := identifier , <arglist> | identifier | epsilon
+<paramlist> := <expression>, <paramlist> | <expression> | epsilon
 
 <for> := for ( identifier = <expression> : <expression> ) { <stmtlist> }
 <while> := while ( <expression> ) { <stmtlist> }

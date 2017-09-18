@@ -8,9 +8,9 @@
 
 void printAST(TreeNode* head, char *prefix){
 	int i = 0;
-	printf("%s%s => ", prefix, head->label);
+	printf("%s%d => ", prefix, head->label);
 	for(i = 0; i < head->numChildren; i ++){
-		printf("%s", head->children[i]->label);
+		printf("%d", head->children[i]->label);
 		if(head->children[i]->data != 0) printf(" (%s) ", head->children[i]->data->text);
 		printf(",");
 	}
