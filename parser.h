@@ -24,4 +24,23 @@ TreeNode *parse(Token** tokens);
 TreeNode *createNode(TreeNodeLabel label);
 void addChild(TreeNode* head, TreeNode* child);
 
+int program(TreeNode *head, Token **tokens, int *current);
+int stmtlist(TreeNode *head, Token **tokens, int *current);
+int stmt(TreeNode *head, Token **tokens, int *current);
+int assign(TreeNode *head, Token **tokens, int *current);
+int expressionOrFunc(TreeNode *head, Token **tokens, int *current);
+int expression(TreeNode *head, Token **tokens, int *current);
+int func(TreeNode *head, Token **tokens, int *current);
+int funcExec(TreeNode *head, Token **tokens, int *current);
+int arglist(TreeNode *head, Token **tokens, int *current);
+int paramlist(TreeNode *head, Token **tokens, int *current);
+int fn_for(TreeNode *head, Token **tokens, int *current);
+int fn_while(TreeNode *head, Token **tokens, int *current);
+int math(TreeNode *head, Token **tokens, int *current);
+int fn_sub(TreeNode *head, Token **tokens, int *current);
+int fn_add(TreeNode *head, Token **tokens, int *current);
+int fn_div(TreeNode *head, Token **tokens, int *current);
+int fn_mult(TreeNode *head, Token **tokens, int *current);
+int fn_pow(TreeNode *head, Token **tokens, int *current);
+
 #endif
