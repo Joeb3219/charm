@@ -3,7 +3,9 @@ y = 6;
 
 z = fn(a, b){
 	ret a + b;
-}(6, 7);
+};
+
+zReturn = z(6, 7);
 
 f = fn(){
 	i = 0;
@@ -11,7 +13,7 @@ f = fn(){
 		i += j;
 	}
 	ret i;
-}();
+};
 
 main = fn(a, b){
 	ret a + b;
@@ -19,7 +21,11 @@ main = fn(a, b){
 
 me = fn(a, b){
 	ret a(2) + b(3);
-}(
+}
+
+meReturn = me(
 	fn(c){ret c*2;},
 	fn(d){ret d*3;}
 );
+
+main(5, 6);

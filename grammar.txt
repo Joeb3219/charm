@@ -8,13 +8,20 @@ ret fn if while for
 
 <program> := <stmtlist>
 <stmtlist> := <stmt>;<stmtlist>|epsilon
-<stmt> := 
+<stmt> := <assign> | <expression> | <for> | <while>
 
-<variable> := identifier
+<assign> := identifier = <expressionOrFunc>
 
-<value> := number|<variable>
+<expression> := (<expr>) | <math> | number | identifier | <funcExec>
+<func> := fn ( <arglist> ) { <stmtlist> }
+<funcExec> := identifier ( <paramlist> )
 
-<assign> := <variable> = <expression>
-<for> := for ( <variable> = <value> : <value> ) { <stmtlist> }
-<function> := fn ( <varlist> ) { <stmtlist> }
-<functionEval> := <function> ( <vallist> ) | <variable> ( <vallist> )
+<for> := for ( identifier = <expression> : <expression> ) { <stmtlist> }
+<while> := while ( <expression> ) { <stmtlist> }
+
+<math> := <sub>
+<sub> := <expression> - <add> | <add>
+<add> := <expression> + <div> | <div>
+<div> := <expression> / <mult> | <mult>
+<mult> := <expression> * <pow> | <pow>
+<pow> := <expression> ^ <expression> | <expression>
