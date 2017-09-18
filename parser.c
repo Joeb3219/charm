@@ -21,11 +21,15 @@ void stmt(TreeNode *head, Token **tokens, int *current){
 	if(token->type == IDENTIFIER || token->type == PAREN_OPEN || token->type == NUMBER) expression(node, tokens, current);
 }
 
+// identifier -> identifier = expression
 void assign(TreeNode *head, Token **tokens, int *current){
 	printCurrentToken();
 	TreeNode *node = createNode(TN_ASSIGN);
 	addChild(head, node);
-	
+	Token *token = look();
+	if(token->type == IDENTIFIER){
+		
+	}
 }
 
 // identifier = -> assign
@@ -159,6 +163,9 @@ void program(TreeNode *head, Token **tokens, int *current){
 	TreeNode *node = createNode(TN_PROGRAM);
 	addChild(head, node);
 	stmtlist(node, tokens, current);
+	if(look()->type != END){
+		error(ERR_SEVERE, look()->line, look()->col, "Encountered unexepected token: %s", look()->text);
+	}
 }
 
 TreeNode *parse(Token** tokens){
