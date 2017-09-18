@@ -2,6 +2,7 @@
 	#define _IO_H_
 
 	#include "lexer.h"
+	#include "parser.h"
 
 	#define ERR_LOG 0
 	#define ERR_SEVERE 1

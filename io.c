@@ -4,6 +4,7 @@
 #include <string.h>
 #include "io.h"
 #include "lexer.h"
+#include "parser.h"
 
 void printAST(TreeNode* head, char *prefix){
 	int i = 0;

@@ -23,16 +23,8 @@ struct Token{
 	enum TokenType type;
 };
 
-struct TreeNode{
-        char *label;
-        struct Token* data;
-        int numChildren;
-        struct TreeNode** children;
-};
-
 typedef enum TokenType TokenType;
-typedef struct Token Token;;
-typedef struct TreeNode TreeNode;
+typedef struct Token Token;
 
 Token** getTokens(FILE* file);
 
