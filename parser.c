@@ -3,89 +3,139 @@
 #include "parser.h"
 #include "io.h"
 
-#define peek() peek(tokens + (*current), 0)
+#define lookAhead(X) peek(tokens + (*current), X)
+#define look() peek(tokens + (*current), 0)
 #define consume() consume(tokens, current)
-#define printCurrentToken() printf("%s\n", tokenToString(peek()))
+#define printCurrentToken() printf("[%s]: %s\n", __FUNCTION__, tokenToString(look()))
 
 // for -> <for>
 // while -> <while>
 // identifier, number, ( -> expression
 void stmt(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
 	TreeNode *node = createNode(TN_STMT);
 	addChild(head, node);
-	Token *token = peek();
-	printCurrentToken();
+	Token *token = look();
 	if(token->type == FOR) fn_for(node, tokens, current);
 	if(token->type == WHILE) fn_while(node, tokens, current);
 	if(token->type == IDENTIFIER || token->type == PAREN_OPEN || token->type == NUMBER) expression(node, tokens, current);
 }
 
 void assign(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
 	TreeNode *node = createNode(TN_ASSIGN);
 	addChild(head, node);
+	
 }
 
+// identifier = -> assign
+// identifier ( -> funcExec
+// identifier (otherwise) -> identifier
+// # -, # +, # *, # ^, # / -> math
+// # (otherwise) -> number
+// ( -> expression
 void expression(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
 	TreeNode *node = createNode(TN_EXPRESSION);
 	addChild(head, node);
+	Token *token = look();
+	Token *secondToken = lookAhead(1);
+	if(token->type == IDENTIFIER){
+		if(secondToken->type == ASSIGN) assign(node, tokens, current);
+		else if(secondToken->type == PAREN_OPEN) funcExec(node, tokens, current);
+		else identifier(node, tokens, current);
+	}
+	if(token->type == NUMBER){
+		if(secondToken->type >= OP_ADD && secondToken->type <= OP_NOT) math(node, tokens, current);
+		else number(node, tokens, current);
+	}
+	if(token->type == PAREN_OPEN){
+		consume();
+		expression(node, tokens, current);
+		consume();
+	}
 }
 
 void func(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
 	TreeNode *node = createNode(TN_FUNC);
 	addChild(head, node);
 }
 
+void identifier(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
+	TreeNode *node = createNode(TN_IDENTIFIER);
+	addChild(head, node);
+}
+
+void number(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
+	TreeNode *node = createNode(TN_NUMBER);
+	addChild(head, node);
+}
+
 void funcExec(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
 	TreeNode *node = createNode(TN_FUNCEXEC);
 	addChild(head, node);
 }
 
 void arglist(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
 	TreeNode *node = createNode(TN_ARGLIST);
 	addChild(head, node);
 }
 
 void paramlist(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
 	TreeNode *node = createNode(TN_PARAMLIST);
 	addChild(head, node);
 }
 
 void fn_for(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
 	TreeNode *node = createNode(TN_FOR);
 	addChild(head, node);
 }
 
 void fn_while(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
 	TreeNode *node = createNode(TN_WHILE);
 	addChild(head, node);
 }
 
 void math(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
 	TreeNode *node = createNode(TN_MATH);
 	addChild(head, node);
 }
 
 void fn_sub(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
 	TreeNode *node = createNode(TN_SUB);
 	addChild(head, node);
 }
 
 void fn_add(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
 	TreeNode *node = createNode(TN_ADD);
 	addChild(head, node);
 }
 
 void fn_div(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
 	TreeNode *node = createNode(TN_DIV);
 	addChild(head, node);
 }
 
 void fn_mult(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
 	TreeNode *node = createNode(TN_MULT);
 	addChild(head, node);
 }
 
 void fn_pow(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
 	TreeNode *node = createNode(TN_POW);
 	addChild(head, node);
 }
@@ -93,10 +143,10 @@ void fn_pow(TreeNode *head, Token **tokens, int *current){
 // identifier, (, number, for, while -> <stmt>; <stmtlist>
 // otherwise -> epsilon
 void stmtlist(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
 	TreeNode *node = createNode(TN_STMTLIST);
 	addChild(head, node);
-	Token *token = peek();
-	printCurrentToken();
+	Token *token = look();
 	if(token->type == IDENTIFIER || token->type == NUMBER || token->type == PAREN_OPEN || token->type == FOR || token->type == WHILE){
 		stmt(node, tokens, current);
 		consume();
@@ -105,6 +155,7 @@ void stmtlist(TreeNode *head, Token **tokens, int *current){
 }
 
 void program(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
 	TreeNode *node = createNode(TN_PROGRAM);
 	addChild(head, node);
 	stmtlist(node, tokens, current);

@@ -7,7 +7,8 @@
 enum TreeNodeLabel{
 	TN_HEAD, TN_PROGRAM, TN_STMTLIST, TN_STMT, TN_ASSIGN, TN_EXPRESSION,
 	TN_EXPRESSIONORFUNC, TN_FUNC, TN_FUNCEXEC, TN_FOR, TN_WHILE, TN_MATH, TN_SUB,
-	TN_ADD, TN_DIV, TN_MULT, TN_POW, TN_ARGLIST, TN_PARAMLIST
+	TN_ADD, TN_DIV, TN_MULT, TN_POW, TN_ARGLIST, TN_PARAMLIST,
+	TN_IDENTIFIER, TN_NUMBER
 };
 
 struct TreeNode{
@@ -42,5 +43,7 @@ void fn_add(TreeNode *head, Token **tokens, int *current);
 void fn_div(TreeNode *head, Token **tokens, int *current);
 void fn_mult(TreeNode *head, Token **tokens, int *current);
 void fn_pow(TreeNode *head, Token **tokens, int *current);
+void identifier(TreeNode *head, Token **tokens, int *current);
+void number(TreeNode *head, Token **tokens, int *current);
 
 #endif
