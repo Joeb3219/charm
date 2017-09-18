@@ -32,7 +32,7 @@ void assign(TreeNode *head, Token **tokens, int *current){
 	if(token->type == IDENTIFIER){
 		identifier(node, tokens, current);
 		consumeOrDie(ASSIGN); // Consumes the equals sign.
-		expression(node, tokens, current);
+		expressionOrFunc(node, tokens, current);
 	}
 }
 
@@ -64,6 +64,20 @@ void expression(TreeNode *head, Token **tokens, int *current){
 	}
 }
 
+// fn -> func
+// Otherwise -> expression
+void expressionOrFunc(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
+	TreeNode *node = createNode(TN_EXPRESSIONORFUNC);
+	addChild(head, node);
+	Token *token = look();
+	if(token->type == FN){
+		func(node, tokens, current);
+	}else{
+		expression(node, tokens, current);
+	}
+}
+
 // fn -> fn ( <arglist> ) { <stmtlist> }
 void func(TreeNode *head, Token **tokens, int *current){
 	printCurrentToken();
@@ -73,6 +87,10 @@ void func(TreeNode *head, Token **tokens, int *current){
 		consumeOrDie(FN); // Consume the fn token
 		consumeOrDie(PAREN_OPEN); // Consume the ( token
 		arglist(node, tokens, current);
+		consumeOrDie(PAREN_CLOSE); // Consume the ) token
+		consumeOrDie(CURLY_OPEN); // Consume the { token
+		stmtlist(node, tokens, current);
+		consumeOrDie(CURLY_CLOSE); // Consume the } token
 	}
 }
 
