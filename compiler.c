@@ -7,6 +7,13 @@
 #include "io.h"
 #include "hashmap.h"
 
+// Goes through entire head, and finds all of the functions and generates their code.
+void compileFunctions(FILE* file, TreeNode* head, Hashmap* table){
+	if(head->label == FN_FUNC){
+
+	}
+}
+
 void compile(FILE* file, TreeNode* head){
 	Hashmap* lookupTable = generateHashmap();
 

@@ -6,5 +6,6 @@
 	#include "lexer.h"
 
 	void compile(FILE *file, TreeNode *head);
+	void compileFunctions(FILE *file, TreeNode* head, Hashmap* table);
 
 #endif
