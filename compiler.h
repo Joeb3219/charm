@@ -5,6 +5,7 @@
 	#include "io.h"
 	#include "lexer.h"
 
+	unsigned long long hash(char* key);
 	void compile(FILE *file, TreeNode *head);
 
 #endif
