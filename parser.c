@@ -36,13 +36,35 @@ void assign(TreeNode *head, Token **tokens, int *current){
 	}
 }
 
+// identifier (otherwise) -> expressionnonMath
+// if second symbol  -, +, *, ^, / -> math
+// ( -> expression
+void expression(TreeNode *head, Token **tokens, int *current){
+	printCurrentToken();
+	TreeNode *node = createNode(TN_EXPRESSION);
+	addChild(head, node);
+	Token *token = look();
+	Token *secondToken = lookAhead(1);
+	if(token->type == IDENTIFIER){
+		if(secondToken->type >= OP_ADD && secondToken->type <= OP_EXP) math(node, tokens, current);
+		else expressionNonMath(node, tokens, current);
+	}
+	if(token->type == NUMBER){
+		if(secondToken->type >= OP_ADD && secondToken->type <= OP_EXP) math(node, tokens, current);
+		else expressionNonMath(node, tokens, current);
+	}
+	if(token->type == PAREN_OPEN){
+		consumeOrDie(PAREN_OPEN); // Consume open paren
+		expression(node, tokens, current);
+		consumeOrDie(PAREN_CLOSE); // Consume the close paren
+	}
+}
+
 // identifier = -> assign
 // identifier ( -> funcExec
 // identifier (otherwise) -> identifier
-// # -, # +, # *, # ^, # / -> math
-// # (otherwise) -> number
-// ( -> expression
-void expression(TreeNode *head, Token **tokens, int *current){
+// number (otherwise) -> number
+void expressionNonMath(TreeNode *head, Token **tokens, int *current){
 	printCurrentToken();
 	TreeNode *node = createNode(TN_EXPRESSION);
 	addChild(head, node);
@@ -54,13 +76,7 @@ void expression(TreeNode *head, Token **tokens, int *current){
 		else identifier(node, tokens, current);
 	}
 	if(token->type == NUMBER){
-		if(secondToken->type >= OP_ADD && secondToken->type <= OP_NOT) math(node, tokens, current);
-		else number(node, tokens, current);
-	}
-	if(token->type == PAREN_OPEN){
-		consumeOrDie(PAREN_OPEN); // Consume open paren
-		expression(node, tokens, current);
-		consumeOrDie(PAREN_CLOSE); // Consume the close paren
+		number(node, tokens, current);
 	}
 }
 
@@ -141,6 +157,7 @@ void paramlist(TreeNode *head, Token **tokens, int *current){
 	addChild(head, node);
 }
 
+
 void fn_for(TreeNode *head, Token **tokens, int *current){
 	printCurrentToken();
 	TreeNode *node = createNode(TN_FOR);
@@ -153,40 +170,77 @@ void fn_while(TreeNode *head, Token **tokens, int *current){
 	addChild(head, node);
 }
 
+// second symbol is either +, -, /, *, or ^ -> fn_sub
 void math(TreeNode *head, Token **tokens, int *current){
 	printCurrentToken();
 	TreeNode *node = createNode(TN_MATH);
 	addChild(head, node);
+	Token *secondToken = lookAhead(1);
+	if(secondToken->type >= OP_ADD && secondToken->type <= OP_EXP) fn_sub(node, tokens, current);
 }
 
 void fn_sub(TreeNode *head, Token **tokens, int *current){
 	printCurrentToken();
 	TreeNode *node = createNode(TN_SUB);
 	addChild(head, node);
+	Token *secondToken = lookAhead(1);
+	if(secondToken->type == OP_SUB){
+		expressionNonMath(node, tokens, current);
+		consumeOrDie(OP_SUB); // consume - token
+		fn_add(node, tokens, current);
+	}else fn_add(node, tokens, current);
 }
 
 void fn_add(TreeNode *head, Token **tokens, int *current){
 	printCurrentToken();
 	TreeNode *node = createNode(TN_ADD);
 	addChild(head, node);
+	Token *secondToken = lookAhead(1);
+	if(secondToken->type == OP_ADD){
+		expressionNonMath(node, tokens, current);
+		consumeOrDie(OP_ADD); // consume - token
+		fn_div(node, tokens, current);
+	}else fn_div(node, tokens, current);
 }
 
 void fn_div(TreeNode *head, Token **tokens, int *current){
 	printCurrentToken();
 	TreeNode *node = createNode(TN_DIV);
 	addChild(head, node);
+	Token *secondToken = lookAhead(1);
+	if(secondToken->type == OP_DIV){
+		expressionNonMath(node, tokens, current);
+		consumeOrDie(OP_DIV); // consume - token
+		fn_mult(node, tokens, current);
+	}else fn_mult(node, tokens, current);
 }
 
 void fn_mult(TreeNode *head, Token **tokens, int *current){
 	printCurrentToken();
 	TreeNode *node = createNode(TN_MULT);
 	addChild(head, node);
+	Token *secondToken = lookAhead(1);
+	if(secondToken->type == OP_MULT){
+		expressionNonMath(node, tokens, current);
+		consumeOrDie(OP_MULT); // consume - token
+		fn_pow(node, tokens, current);
+	}else fn_pow(node, tokens, current);
 }
 
 void fn_pow(TreeNode *head, Token **tokens, int *current){
 	printCurrentToken();
 	TreeNode *node = createNode(TN_POW);
 	addChild(head, node);
+	Token *token = look(), *secondToken = lookAhead(1);
+	if(secondToken->type == OP_EXP){
+		expression(node, tokens, current);
+		consumeOrDie(OP_EXP); // consume - token
+		expression(node, tokens, current);
+	}else{
+		if(token->type == IDENTIFIER) identifier(node, tokens, current);
+		else if(token->type == NUMBER) number(node, tokens, current);
+		else expression(node, tokens, current);
+	}
 }
 
 // identifier, (, number, for, while -> <stmt>; <stmtlist>

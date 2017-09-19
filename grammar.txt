@@ -13,9 +13,10 @@ ret fn if while for
 <assign> := identifier = <expressionOrFunc>
 
 <expressionOrFunc> := <expression> | <func>
-<expression> := (<expr>) | <assign> | <math> | number | identifier | <funcExec> | <return>
+<expression> := (<expr>) | <expressionNonMath> | <math> | <return>
 <func> := fn ( <arglist> ) { <stmtlist> }
 <funcExec> := identifier ( <paramlist> )
+<expressionNonMath> := <assign> | number | identifier | <funcExec>
 
 <return> := ret <expression>
 
@@ -26,8 +27,8 @@ ret fn if while for
 <while> := while ( <expression> ) { <stmtlist> }
 
 <math> := <sub>
-<sub> := <expression> - <add> | <add>
-<add> := <expression> + <div> | <div>
-<div> := <expression> / <mult> | <mult>
-<mult> := <expression> * <pow> | <pow>
-<pow> := <expression> ^ <expression> | <expression>
+<sub> := <expressionNonMath> - <add> | <add>
+<add> := <expressionNonMath> + <div> | <div>
+<div> := <expressionNonMath> / <mult> | <mult>
+<mult> := <expressionNonMath> * <pow> | <pow>
+<pow> := <expressionNonMath> ^ <expression> | <expression>
