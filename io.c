@@ -8,9 +8,9 @@
 
 void printAST(TreeNode* head, char *prefix){
 	int i = 0;
-	printf("%s%d => ", prefix, head->label);
+	printf("%s%s => ", prefix, nodeTypeToString(head->label));
 	for(i = 0; i < head->numChildren; i ++){
-		printf("%d", head->children[i]->label);
+		printf("%s", nodeTypeToString(head->children[i]->label));
 		if(head->children[i]->data != 0) printf(" (%s) ", head->children[i]->data->text);
 		printf(",");
 	}
@@ -178,6 +178,86 @@ char* tokenTypeToString(TokenType type){
 	}
 	return buffer;
 }
+
+char* nodeTypeToString(TreeNodeLabel type){
+	char *buffer = malloc(11);
+	switch(type){
+		case TN_HEAD:
+			sprintf(buffer, "HEAD");
+			break;
+		case TN_PROGRAM:
+			sprintf(buffer, "PROGRAM");
+			break;
+		case TN_STMTLIST:
+			sprintf(buffer, "STMTLIST");
+			break;
+		case TN_STMT:
+			sprintf(buffer, "STMT");
+			break;
+		case TN_ASSIGN:
+			sprintf(buffer, "ASSIGN");
+			break;
+		case TN_EXPRESSION:
+			sprintf(buffer, "EXPRESS");
+			break;
+		case TN_EXPRESSIONORFUNC:
+			sprintf(buffer, "EXPR|FUNC");
+			break;
+		case TN_FUNC:
+			sprintf(buffer, "FUNC");
+			break;
+		case TN_FUNCEXEC:
+			sprintf(buffer, "FUNCEXEC");
+			break;
+		case TN_FOR:
+			sprintf(buffer, "FOR");
+			break;
+		case TN_WHILE:
+			sprintf(buffer, "WHILE");
+			break;
+		case TN_MATH:
+			sprintf(buffer, "MATH");
+			break;
+		case TN_SUB:
+			sprintf(buffer, "SUB");
+			break;
+		case TN_ADD:
+			sprintf(buffer, "ADD");
+			break;
+		case TN_DIV:
+			sprintf(buffer, "DIV");
+			break;
+		case TN_MULT:
+			sprintf(buffer, "MULT");
+			break;
+		case TN_POW:
+			sprintf(buffer, "POW");
+			break;
+		case TN_ARGLIST:
+			sprintf(buffer, "ARGLIST");
+			break;
+		case TN_PARAMLIST:
+			sprintf(buffer, "PARAMLIST");
+			break;
+		case TN_IDENTIFIER:
+			sprintf(buffer, "IDENT");
+			break;
+		case TN_NUMBER:
+			sprintf(buffer, "NUMBER");
+			break;
+		case TN_RET:
+			sprintf(buffer, "RETURN");
+			break;
+		case TN_EXPRNONMATH:
+			sprintf(buffer, "EXPNOMATH");
+			break;
+		default:
+			sprintf(buffer, "ERR");
+			break;
+	}
+	return buffer;
+}
+
 
 char fpeek(FILE *stream){
     char c;

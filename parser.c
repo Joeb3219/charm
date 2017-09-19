@@ -272,6 +272,7 @@ TreeNode *parse(Token** tokens){
 	int currentToken = 0;
 	TreeNode *head = createNode(TN_HEAD);
  	program(head, tokens, &currentToken);
+	printAST(head, strdup("-"));
 	return NULL;
 }
 

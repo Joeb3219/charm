@@ -14,6 +14,7 @@
 	char* tokenTypeToString(TokenType type);
 	char* tokenToString(Token *token);
 	void printTokens(FILE *file, Token** tokens);
+	char* nodeTypeToString(TreeNodeLabel type);
 
 	char fpeek(FILE* stream);
 
