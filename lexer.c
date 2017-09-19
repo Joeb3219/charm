@@ -215,10 +215,27 @@ Token** getTokens(FILE* file){
 
 	// Now we create an "END" token, which is the endpoint of our program.
 	tokens = realloc(tokens, (numTokens + 1) * sizeof(Token*));
-	tokens[numTokens] = malloc(sizeof(Token));
+        tokens[numTokens] = malloc(sizeof(Token));
         tokens[numTokens]->type = END;
         tokens[numTokens]->line = lineNo;
 	tokens[numTokens]->col = colNo;
 
 	return tokens;
+}
+
+void freeTokens(Token **tokens){
+	Token *token;
+	int i = 0;
+	// Free individual tokens, up to the END token
+	while( (token = tokens[i])->type != END){
+		free(token->text);
+		free(token);
+		i ++;
+	}
+
+	// Free the END token (it has null text, so if we free it we'll segfault).
+	free(token);
+
+	// Now free the whole list block we asked for
+	free(tokens);
 }

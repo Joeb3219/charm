@@ -1,12 +1,13 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "parser.h"
 #include "io.h"
 
 #define lookAhead(X) peek(tokens + (*current), X)
 #define look() peek(tokens + (*current), 0)
 #define consume() consume(tokens, current)
-#define printCurrentToken() printf("[%s]: %s\n", __FUNCTION__, tokenToString(look()))
+#define printCurrentToken() {char* tlab = tokenToString(look()); printf("[%s]: %s\n", __FUNCTION__, tlab); free(tlab);}
 #define unexpectedToken(T) error(ERR_SEVERE, T->line, T->col, "Encountered unexepected token: %s", T->text)
 #define consumeOrDie(E) {if(look()->type == E){consume();}else{unexpectedToken(look());}}
 
@@ -268,8 +269,8 @@ TreeNode *parse(Token** tokens){
 	int currentToken = 0;
 	TreeNode *head = createNode(TN_HEAD);
  	program(head, tokens, &currentToken);
-	printAST(head, strdup("-"));
-	return NULL;
+	printAST(head, 1);
+	return head;
 }
 
 TreeNode *createNode(TreeNodeLabel label){

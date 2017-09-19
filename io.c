@@ -6,19 +6,24 @@
 #include "lexer.h"
 #include "parser.h"
 
-void printAST(TreeNode* head, char *prefix){
+void printAST(TreeNode* head, int numDashes){
 	int i = 0;
-	printf("%s%s => ", prefix, nodeTypeToString(head->label));
+	for(i = 0; i < numDashes; i ++){
+		printf("-");
+	}
+	char *label = nodeTypeToString(head->label);
+	printf("%s => ", label);
+	free(label);
 	for(i = 0; i < head->numChildren; i ++){
-		printf("%s", nodeTypeToString(head->children[i]->label));
+		label = nodeTypeToString(head->children[i]->label);
+		printf("%s", label);
+		free(label);
 		if(head->children[i]->data != 0) printf(" (%s) ", head->children[i]->data->text);
 		printf(",");
 	}
 	printf("\n");
-	char *nPrefix = strdup(prefix);
-	strcat(nPrefix, "--");
 	for(i = 0; i < head->numChildren; i ++){
-		printAST(head->children[i], nPrefix);
+		printAST(head->children[i], numDashes + 1);
 	}
 }
 

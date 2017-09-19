@@ -18,6 +18,6 @@
 
 	char fpeek(FILE* stream);
 
-	void printAST(TreeNode* head, char *prefix);
+	void printAST(TreeNode* head, int numDashes);
 
 #endif

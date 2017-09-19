@@ -29,5 +29,6 @@ typedef struct Token Token;
 Token** getTokens(FILE* file);
 Token* peek(Token** tokens, int distance);
 Token* consume(Token** tokens, int *current);
+void freeTokens(Token** tokens);
 
 #endif

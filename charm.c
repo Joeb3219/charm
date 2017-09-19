@@ -27,7 +27,10 @@ int main(int argc, char **argv){
 
 	closeFile(tokenOut);
 
-	parse(tokens);
+	TreeNode* head = parse(tokens);
+
+	freeTokens(tokens);
+	freeNode(head);
 
 	printf("\n");
 
