@@ -118,10 +118,21 @@ void funcExec(TreeNode *head, Token **tokens, int *current){
 	addChild(head, node);
 }
 
+// identifier , -> identifier, arglist
+// identifier -> identifier
+// otherwise -> epsilon
 void arglist(TreeNode *head, Token **tokens, int *current){
 	printCurrentToken();
 	TreeNode *node = createNode(TN_ARGLIST);
 	addChild(head, node);
+	Token *token = look(), *secondToken = lookAhead(2);
+	if(token->type == IDENTIFIER){
+		if(secondToken->type == COMMA){
+			identifier(node, tokens, current);
+			consumeOrDie(COMMA); // consume the comma token
+			arglist(node, tokens, current);
+		}else identifier(node, tokens, current);
+	}
 }
 
 void paramlist(TreeNode *head, Token **tokens, int *current){
