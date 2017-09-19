@@ -236,11 +236,7 @@ void fn_pow(TreeNode *head, Token **tokens, int *current){
 		expression(node, tokens, current);
 		consumeOrDie(OP_EXP); // consume - token
 		expression(node, tokens, current);
-	}else{
-		if(token->type == IDENTIFIER) identifier(node, tokens, current);
-		else if(token->type == NUMBER) number(node, tokens, current);
-		else expression(node, tokens, current);
-	}
+	} else expression(node, tokens, current);
 }
 
 // identifier, (, number, for, while -> <stmt>; <stmtlist>
