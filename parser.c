@@ -269,6 +269,7 @@ TreeNode *parse(Token** tokens){
 	int currentToken = 0;
 	TreeNode *head = createNode(TN_HEAD);
  	program(head, tokens, &currentToken);
+	condenseAST(head);
 	printAST(head, 1);
 	return head;
 }
@@ -301,4 +302,56 @@ void addChild(TreeNode* head, TreeNode* child){
                 head->children = realloc(head->children, head->numChildren * sizeof(TreeNode*));
         }
         head->children[head->numChildren - 1] = child;
+}
+
+// We attempt to condense the AST such that we don't have redundant blocks that aren't needed for evaluation.
+// We have several defined rules, but generally at the statement level we attempt to pull the root of whatever we are looking at
+// up to the statement level.
+// That is, say we have stmt -> expr -> math -> fn_sub -> fn_add
+// We attempt to move this such that our expression is stmt -> expression -> fn_add
+// There are edge cases to this. Consider a stmt with a child that is a for loop.
+// For loops need their topmost label (for) to distinguish what the children of it actually mean (consider looking at the contents of a for vs a while loop vs a regular expression).
+// Thus, we descend to the stmt level, and then employ special rules for expr, for, and while.
+void condenseAST(TreeNode* head){
+	int i = 0;
+	switch(head->label){
+		case TN_HEAD:
+			if(head->numChildren != 0) condenseAST(head->children[0]);
+			break;
+		case TN_PROGRAM:
+			if(head->numChildren != 0) condenseAST(head->children[0]);
+			break;
+		case TN_STMTLIST:
+			for(i = 0; i < head->numChildren; i ++){
+				condenseAST(head->children[i]);
+			}
+			break;
+		case TN_STMT:
+			for(i = 0; i < head->numChildren; i ++){
+				condenseAST(head->children[i]);
+			}
+			break;
+		case TN_EXPRESSION:
+			for(i = 0; i < head->numChildren; i ++){
+				if(head->children[i]->label == TN_EXPRESSION) condenseAST(head->children[i]);
+				if(head->children[i]->label == TN_MATH){
+
+				}
+				if(head->children[i]->label == TN_EXPRNONMATH){
+
+				}
+			}
+			break;
+		case TN_EXPRESSIONORFUNC:
+			break;
+		case TN_EXPRNONMATH:
+			break;
+		case TN_FOR:
+			break;
+		case TN_WHILE:
+			break;
+		default:
+			printf("At an unfamiliar level\n");
+			break;
+	}
 }

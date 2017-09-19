@@ -25,6 +25,7 @@ TreeNode *parse(Token** tokens);
 TreeNode *createNode(TreeNodeLabel label);
 void addChild(TreeNode* head, TreeNode* child);
 void freeNode(TreeNode* head);
+void condenseAST(TreeNode* node);
 
 void program(TreeNode *head, Token **tokens, int *current);
 void stmtlist(TreeNode *head, Token **tokens, int *current);
