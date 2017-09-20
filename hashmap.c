@@ -2,7 +2,7 @@
 #include <string.h>
 #include "hashmap.h"
 
-#define HASHMAP_DEFAULT_SIZE 256
+#define HASHMAP_DEFAULT_SIZE 4096
 
 // We use a FNV-1a hash, as described https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
 unsigned long long hash(char* key){
