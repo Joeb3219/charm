@@ -272,3 +272,13 @@ char fpeek(FILE *stream){
 
     return c;
 }
+
+// Appends a and b into a new string, and then frees a and b.
+char* appendString(char* a, char* b){
+	int totalSize = strlen(a) + strlen(b) + 1; // Create extra byte for the \0
+	char* result = malloc(totalSize * sizeof(char));
+	sprintf(result, "%s%s", a, b);
+	free(a);
+	free(b);
+	return result;
+}

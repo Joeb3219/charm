@@ -20,4 +20,6 @@
 
 	void printAST(TreeNode* head, int numDashes);
 
+	char* appendString(char* a, char* b);
+
 #endif
